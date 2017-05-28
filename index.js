@@ -92,7 +92,9 @@ var followAccounts = (accounts) => {
 
             statuses.forEach((status) => {
                 // search if already followed or not.
-                if(!searchFollowing(accounts, status.account))
+                var found = searchFollowing(accounts, status.account);
+                console.log("found? " + found);
+                if(!found)
                 {
                     accounts.push(status.account);
 
@@ -115,9 +117,10 @@ var followAccounts = (accounts) => {
  * @param {object} account 
  */
 var searchFollowing = (accounts, account) => {
+    
     var found = false;
     accounts.some((_account) => {
-        if(_account.id == account.id)
+        if(_account.url == account.url)
         {
             found = true;
             return true;

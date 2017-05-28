@@ -92,19 +92,15 @@ var followAccounts = (accounts) => {
 
             statuses.forEach((status) => {
                 // search if already followed or not.
-                var found = searchFollowing(accounts, status.account);
-                console.log("found? " + found);
-                if(!found)
+                if(!searchFollowing(accounts, status.account))
                 {
                     accounts.push(status.account);
 
                     // follow account
-                    setTimeout(() => { 
-                            myM.post('follows', {uri: status.account.username + '@' + pref.target.domain})
-                        .then((res) => {
-                            console.log("Followed: " + res.data.username);
-                        });
-                    }, 500);
+                    myM.post('follows', {uri: status.account.username + '@' + pref.target.domain})
+                    .then((res) => {
+                        console.log("Followed: " + res.data.username);
+                    });
                 }
             });
         });

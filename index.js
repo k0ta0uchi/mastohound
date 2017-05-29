@@ -6,7 +6,7 @@ const Masto = require('mastodon');
 const pref = JSON.parse(fs.readFileSync('./pref.json', 'utf8'));
 
 const INTERVAL_MIN = 1;         // interval for following.
-const STATUS_LIMIT = 5;         // number of statuses to process at once.
+const STATUS_LIMIT = 10;         // number of statuses to process at once.
 const FOLLOWINGS_LIMIT = 80;    // number of following limit when retrieving accounts.
 
 // target instance to follow
@@ -99,12 +99,15 @@ var followAccounts = (accounts) => {
                     // follow account
                     myM.post('follows', {uri: status.account.username + '@' + pref.target.domain})
                     .then((res) => {
-                        console.log("Followed: " + res.data.username);
+                        if(!res.data.error)
+                        {
+                            console.log("Followed: " + res.data.username);
+                        }
                     });
                 }
             });
         });
-    }, INTERVAL_MIN * 20 * 1000);
+    }, INTERVAL_MIN * 60 * 1000);
 };
 
 /**

@@ -10,4 +10,4 @@ First time you launch, you'll be asked which instance to follow and instance tha
 Follow the instruction provided.  
 (Use singlemode if you want to use same account as target account.)
 
-Exec `app.js` and that's it!!
+Exec `node app.js` and that's it!!

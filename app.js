@@ -1,9 +1,49 @@
-const fs = require('fs');
-const Masto = require('mastodon');
+const fs    = require('fs'),
+      rl    = require('readline-sync'),
+      Masto = require('mastodon'),
+      async = require('async'),
+      auth  = require('./auth');
 
 // get prefs from pref.json. (use pref.template.json as a template)
 // first, use auth.js to get instances' access_tokens.
-const pref = JSON.parse(fs.readFileSync('./pref.json', 'utf8'));
+var pref;
+try {
+    pref = JSON.parse(fs.readFileSync('pref.json', 'utf-8'));
+}
+catch(e) {
+    // auth process.
+    var singlemode = rl.question('Do you use singlemode? [Y/N]:');
+    var target;
+    var my;
+    if(singlemode == 'Y')
+    {
+        var pref = {singlemode: true};
+        async.waterfall([
+            (callback) => {
+                pref['target'] = auth('target', callback);
+            }
+        ], (err, target) => {
+            pref['target'] = target;
+            fs.writeFileSync('pref.json', JSON.stringify(pref), 'utf-8');
+        });
+    } else if(singlemode == 'N')
+    {
+        var pref = {singlemode: false};
+        async.waterfall([
+            (callback) => {
+                pref['target'] = auth('target', callback);
+            },
+            (target, callback) => {
+                pref["target"] = target;
+                auth('my', callback);
+            }
+        ], (err, my) => {
+            pref['my'] = my;
+            fs.writeFileSync('pref.json', JSON.stringify(pref), 'utf-8');
+        });
+    }
+    return;
+}
 
 const INTERVAL_MIN = 1;         // interval for following.
 const STATUS_LIMIT = 10;         // number of statuses to process at once.
@@ -107,7 +147,7 @@ var followAccounts = (accounts) => {
                 }
             });
         });
-    }, INTERVAL_MIN * 60 * 1000);
+    }, INTERVAL_MIN * 10 * 1000);
 };
 
 /**

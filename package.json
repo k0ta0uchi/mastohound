@@ -1,6 +1,6 @@
 {
   "name": "mastohound",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A follow hound for mastodon.",
   "main": "index.js",
   "scripts": {
@@ -14,7 +14,7 @@
     "mastodon"
   ],
   "author": "k0ta0uchi",
-  "license": "Apache-2.0",
+  "license": "GPLv3",
   "bugs": {
     "url": "https://github.com/k0ta0uchi/mastohound/issues"
   },
